@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         AWS_REGION  = "us-east-1"
+        ACCOUNT_ID = "YOUR_AWS_ACCOUNT_ID" // replace with your AWS account ID
         ECR_REGISTRY = "YOUR_AWS_ACCOUNT_ID.dkr.ecr.${AWS_REGION}.amazonaws.com" / add your ECR registry uri
         REPO_NAME = "demo-app-repo"
         GIT_REPO_URL = 'https://github.com/ShlomiFo/DevOps-assignment-1.git'

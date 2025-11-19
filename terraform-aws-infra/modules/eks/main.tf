@@ -80,7 +80,7 @@ resource "aws_eks_node_group" "ng_a" {
     min_size     = var.node_groups[0].min_size
   }
 
-  instance_types = var.node_groups[0].instance_types
+  instance_types = ["t3.micro"]
   tags           = merge(var.tags, { Name = "${var.cluster_name}-ng-a" })
 }
 
@@ -96,6 +96,6 @@ resource "aws_eks_node_group" "ng_b" {
     min_size     = var.node_groups[1].min_size
   }
 
-  instance_types = var.node_groups[1].instance_types
+  instance_types = ["t3.micro"]
   tags           = merge(var.tags, { Name = "${var.cluster_name}-ng-b" })
 }
