@@ -1,0 +1,55 @@
+replicaCount: 2
+
+image:
+  repository: 487509570044.dkr.ecr.us-east-1.amazonaws.com/demo-app-repo:latest       # <--- replace with your image repo
+  tag: latest                        # <--- replace with your image tag
+  pullPolicy: IfNotPresent
+
+service:
+  port: 80
+  targetPort: 5000                   # Flask container port (change if different)
+  type: ClusterIP
+
+env: []                              # - name: DB_USER / value: foo
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+readinessProbe:
+  httpGet:
+    path: /health
+    port: 5000
+  initialDelaySeconds: 5
+  periodSeconds: 10
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 5000
+  initialDelaySeconds: 10
+  periodSeconds: 20
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
+    # Optional healthcheck path for ALB:
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+  host: ""                             # leave empty for ALB DNS; set to app.example.com if you have a domain
+  path: "/*"
+
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 50
+
+podAnnotations: {}
