@@ -2,17 +2,17 @@ pipeline {
     agent any
     environment {
         AWS_REGION  = "us-east-1"
-        ECR_REGISTRY = "487509570044.dkr.ecr.us-east-1.amazonaws.com"
+        ECR_REGISTRY = "YOUR_AWS_ACCOUNT_ID.dkr.ecr.${AWS_REGION}.amazonaws.com" / add your ECR registry uri
         REPO_NAME = "demo-app-repo"
         GIT_REPO_URL = 'https://github.com/ShlomiFo/DevOps-assignment-1.git'
         DOCKER = '/usr/bin/docker'
         AWS = '/usr/local/bin/aws'
 
-        CLUSTER_NAME          = "my-eks-cluster"           // replace with your EKS cluster name
+        CLUSTER_NAME          = "demo-eks"           // replace with your EKS cluster name
         HELM_RELEASE          = "demo-app"                 // Helm release name
-        HELM_CHART_PATH       = "/helm"               // path to your Helm chart in repo
+        HELM_CHART_PATH       = "/helm-chart"               // path to your Helm chart in repo
         NAMESPACE             = "production"               // Kubernetes namespace
-        KUBECONFIG_PATH       = "${WORKSPACE}/kub"  // local kubeconfig path
+        KUBECONFIG_PATH       = "${WORKSPACE}/kubconfig"  // local kubeconfig path
 
     }
 
@@ -44,7 +44,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        docker build -t ${REPO_NAME}:latest .
+                        docker build -t -f /app/Dockerfile ${REPO_NAME}:latest .
                         docker tag $REPO_NAME:latest $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:latest
                     """
                 }
